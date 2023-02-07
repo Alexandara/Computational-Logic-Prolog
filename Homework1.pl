@@ -80,14 +80,30 @@ niece(Niece, AU) :- married(AU, BloodAU), auntuncle(BloodAU, Niece), female(Niec
 niece(Niece, AU) :- married(BloodAU, AU), auntuncle(BloodAU, Niece), female(Niece).  
 
 % HWQ 6
-num(0).
+num(0). 
 num(s(X)) :- num(X).
            
-plus(0, Y, Y).
-plus(s(X), Y, s(Z)) :- plus(X, Y, Z).
+plus(0, Y, Y) :- num(Y).
+plus(s(Num1), Num2, s(Num3)) :- plus(Num1, Num2, Num3).
 
-times(s(0), Y, Y).
-times(s(X), Y, Z) :- plus(Y, I, Z), times(Y, X, I).
+times(0, Y, 0) :- num(Y).
+times(s(Num1), Num2, Num3) :- times(Num2, Num1, I), plus(I, Num2, Num3).
+
+greaterthan(s(N), 0) :- num(N).
+greaterthan(s(SmallNum), s(BigNum)) :- greaterthan(SmallNum, BigNum).
+
+% Class 2/7
+fac(0, s(0)).
+fac(s(N), R) :- fac(N,P), times(s(N), P, R). 
+
+lt(0, s(N)) :- num(N).
+lt(s(N), s(M)) :- lt(N, M).
+
+list([]).
+list([_|T]) :- list(T).
+
+member(X, [X|_]).
+member(Num, [H|T]) :- member(Num, T).
 
 
 
