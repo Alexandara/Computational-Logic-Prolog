@@ -55,7 +55,6 @@ parent(Parent, Child) :- father(Parent, Child).
 sibling(X,Y) :- parent(Parent, X), parent(Parent, Y), X\=Y.
 auntuncle(AU,N) :- sibling(AU, Parent), parent(Parent, N). %Aunt or uncle
 
-
 grandparent(Grandparent, Child) :- parent(Grandparent, Parent), parent(Parent, Child).
 ancestor(Ancestor, Person) :- parent(Ancestor, Person).
 ancestor(Ancestor, Person) :- parent(Ancestor, Z), ancestor(Z, Person).
@@ -92,18 +91,25 @@ times(s(Num1), Num2, Num3) :- times(Num2, Num1, I), plus(I, Num2, Num3).
 greaterthan(s(N), 0) :- num(N).
 greaterthan(s(SmallNum), s(BigNum)) :- greaterthan(SmallNum, BigNum).
 
-% Class 2/7
+% HWQ 7
 fac(0, s(0)).
-fac(s(N), R) :- fac(N,P), times(s(N), P, R). 
+fac(s(Number), Answer) :- fac(Number, P), times(s(Number), P, Answer). % This function works both ways
 
+% HWQ 8
 lt(0, s(N)) :- num(N).
 lt(s(N), s(M)) :- lt(N, M).
 
-list([]).
-list([_|T]) :- list(T).
+remainder(Top, Bottom, Top) :- lt(Top, Bottom).
+remainder(Top, Bottom, Remainder) :- plus(Qr, Bottom, Top), remainder(Qr, Bottom, Remainder).
 
-member(X, [X|_]).
-member(Num, [H|T]) :- member(Num, T).
+quotient(Top, Bottom, Quotient) :- times(Qr, Bottom, Top), remainder(Top, Bottom, Remainder), plus(Quotient, Remainder, Qr).
+
+% HWQ 9
+fib(0, 0).
+fib(s(0), s(0)).
+fib(s(s(Number)), FibNum) :- fib(s(Number), P), fib(Number, P2), plus(P, P2, FibNum). 
+
+
 
 
 
