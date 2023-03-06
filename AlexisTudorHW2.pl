@@ -184,9 +184,6 @@ kth_largest(Xs, K, E) :- both(Xs, LoL), %Break the list into groups of 5
     len(Xs,X1s),
     len(S,S1),
     len(B, B1),!,
-    print(B),
-    print(S),
-    print(K),
     ((B1 = 0, kth_largest([S],K,E);S1=0, kth_largest([B],K,E));
     ((X1s-K) < S1, K1 is K-B1, kth_largest(S, K1, E); kth_largest(B,K,E))).
 
@@ -398,7 +395,7 @@ times(s(X), Y, Z) :- times(X, Y, Z1), add(Y, Z1, Z).
 %%%%%%%%%%%%%%%% Don't Remove Any Helper Functions %%%%%%%%%%%%%%%%%
 
 % add a number to sbt
-insert(N, node, node(N, node, node)).
+insert(N, nil, node(N, nil, nil)).
 insert(N, node(V, A, B), node(V, AA, B)) :- lteq(N, V), insert(N, A, AA).
 insert(N, node(V, A, B), node(V, A, BB)) :- gt(N, V), insert(N, B, BB).
 
@@ -483,12 +480,13 @@ delete(E, T, Tn) :- treetolistremover(E,T,Ls), listtotree(Ls, Tn).
 % 		T is the Nth Triangular Number.
 triangular_num(N,T) :- N > 0, N1 is N-1, triangular_num(N1, T1), T is N+T1.
 triangular_num(1,1).
+triangular_num(0,0).
 
 
 % (iii) reverse_between(I, J, K)
 % 	K is an integer between J and I inclusive, J > I.
-reverse_between(I,J,J) :- I < J.
-reverse_between(I,J,K) :- I < J, J1 is J-1, reverse_between(I, J1, K).
+reverse_between(I,J,J) :- I =< J.
+reverse_between(I,J,K) :- I =< J, J1 is J-1, reverse_between(I, J1, K).
 
 
 % (vi) min_list(List, Min)
@@ -598,14 +596,14 @@ len2([],A,A).
         %    from 1 to 10.
         once(dec_peano(10, TenPeano)),
         once(rangedec(TenPeano, OneToTenPeano)),
-        once(inslist(OneToTenPeano, node, New)),
+        once(inslist(OneToTenPeano, nil, New)),
         once(sumtree(New, FiftyFivePeano)),
         once(peano_dec(FiftyFivePeano, 55)),
         % sum of numbers from 6 to 10
         %     limited list generation method.
         once(dec_peano(6, SixPeano)),
         once(rangedec(TenPeano, SixPeano, TenToSixPeano)),
-        once(inslist(TenToSixPeano, node, Tree2)),
+        once(inslist(TenToSixPeano, nil, Tree2)),
         once(sumtree(Tree2, FortyPeano)),
         once(peano_dec(FortyPeano, 40)).
 
@@ -615,7 +613,7 @@ len2([],A,A).
         %     delete 1 to 5 from tree.
         once(dec_peano(10, TenPeano)),
         once(rangedec(TenPeano, OneToTenPeano)),
-        once(inslist(OneToTenPeano, node, Tree1)),
+        once(inslist(OneToTenPeano, nil, Tree1)),
         once(dec_peano(5, FivePeano)),
         once(rangedec(FivePeano, OneToFivePeano)),
         once(dellist(OneToFivePeano, Tree1, Tree2)),
