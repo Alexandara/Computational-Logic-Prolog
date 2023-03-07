@@ -1,10 +1,10 @@
 /*
- * Name:        <First Name> <Last Name>
+ * Name:        Alexis Tudor
  * Class:       CS6374
  * Assignment:  Homework 2
  * Details:     Contains Prolog source code and unit test cases to test the code.
- *              SWISH link: <Link to your file if there is a SWISH version>
- * Note:        <Additional Notes, e.g. filename for non-code questions.>
+ *              SWISH link: https://swish.swi-prolog.org/p/VNXrWwCD.pl#tabbed-tab-0
+ * Note:        NA
  * 
  * */
 
