@@ -3,9 +3,8 @@
  * Class:       CS6374
  * Assignment:  Homework 3
  * Details:     Contains Prolog source code and unit test cases to test the code.
- *              SWISH link: <Link to your file if there is a SWISH version>
- * Note:        <Additional Notes, e.g. filename for non-code questions.>
- * 
+ *              SWISH link: https://swish.swi-prolog.org/p/kIUxzcVS.pl
+ * Note:        
  * */
 
  :- use_module(library(clpfd)).
