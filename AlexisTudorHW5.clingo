@@ -1,0 +1,170 @@
+% Gelfond and Kahl 1
+
+%“Apollo and Helios are lions in a zoo. Normally lions are dangerous. Baby lions are not dangerous. Helios is a baby lion.” Assume that the zoo has a complete list of baby lions that it maintains regularly. Your program should be able to deduce that Apollo is dangerous, whereas Helios is not. Make sure that (a) if you add another baby lion to your knowledge base, the program would derive that it is not dangerous, even though that knowledge is not explicit; and (b) if you add an explicit fact that Apollo is not dangerous, there is no contradiction and the program answers intelligently.
+
+lion(apollo).
+lion(helios).
+
+dangerous(X) :- lion(X),
+	not ab(d(X)),
+	not -dangerous(X).
+
+-dangerous(X) :- babylion(X).
+
+babylion(helios).
+babylion(ra).
+
+-dangerous(apollo).
+
+
+% Gelfond and Kahl 3
+%“American citizens normally live in the United States. American diplomats may or may not live in the United States. John, Miriam, and Caleb are American citizens. John lives in Italy. Miriam is an American diplomat.” (a) Assume we do not have a complete list of American diplomats. (Note that your program should not be able to conclude that Caleb lives in the United States.) (b) Now assume we have a complete list of American diplomats. Add this information to the program. What does your new program say about Caleb’s place of residence? (c) Rewrite the program from 3b by using the simplified form of the cancellation axiom.
+liveUS(X) :- american(X),
+	not ab(d(X)),
+	not -liveUS(X).
+
+ab(d(X)) :- diplomat(X).
+
+american(john).
+american(miriam).
+american(caleb).
+
+liveItaly(john).
+
+-liveUS(X) :- liveItaly(X).
+
+diplomat(miriam).
+
+% I disagree that you shouldn't be able to conclude Caleb lives in America, because American citizens normally live in America. That is the default. Caleb is a non-diplomat (or not known to be a diplomat) American citizen.
+
+
+% Gelfond and Kahl 5
+%“A field that studies pure ideas does not study the natural world. A field that studies the natural world does not study pure ideas. Mathematics normally studies pure ideas. Science normally studies the natural world. As a computer scientist, Daniela studies both mathematics and science. Both mathematics and science study our place in the world.” Make sure your program can deduce that Daniela studies our place in the world.
+
+study(daniela, cs).
+
+study(X,math) :- study(X,cs).
+study(X,science) :- study(X,cs).
+
+pureideas(math).
+
+naturalworld(science).
+
+-pureideas(X) :- naturalworld(X).
+-naturalworld(X) :- pureideas(X).
+
+studyourplace(X) :- study(X,math), study(X,science).
+
+% Gelfond and Kahl 7
+%Students can graduate only if they have taken all the courses in the first list. Write a program that, given the above information, determines which students can graduate. Make sure that, given the following sample knowledge base, your program is able to 
+%conclude can graduate(john).
+%¬can graduate(mary).
+
+student(john).
+student(mary).
+course(math).
+course(graphs).
+took(john, math).
+took(john, graphs).
+took(mary, graphs).
+
+cangraduate(X) :- student(X), took(X, math), took(X,graphs). 
+
+-cangraduate(X) :- student(X), not took(X,math).
+-cangraduate(X) :- student(X), not took(X,graphs).
+
+% Gelfond and Kahl 9
+%Using the notions of hierarchy and defaults as detailed in Section 5.4, write an ASP program to represent the following information. Be as general as you can.
+%• A Selmer Mark VI is a saxophone.
+%• Jake’s saxophone is a Selmer Mark VI.
+%• Mo’s saxophone is a Selmer Mark VI.
+%• Part of a saxophone is a high D key.
+%• Part of the high D key is a spring that makes it work.
+%• The spring is normally not broken.
+%• Mo’s spring for his high D key is broken.
+%Make sure that your program correctly entails that Jake’s saxophoneworks while Mo’s is broken. For simplicity, assume that no one has more than one saxophone, and hence, saxophones can be identified by the name of their owner.
+
+class(saxophone).
+class(key).
+class(part).
+
+is_subclass(key, saxophone).
+is_subclass(part, key). 
+
+subclass(C1 ,C2) :- is_subclass(C1 ,C2).
+
+subclass(C1 ,C2) :- is_subclass(C1 ,C3),
+	subclass(C3 ,C2).
+
+-subclass(C1 ,C2) :- class(C1),
+	class(C2),
+	not subclass(C1 ,C2).
+
+object(selmer).
+is_a(selmer, saxophone).
+
+object(jake).
+is_a(jake, saxophone).
+
+object(mo).
+is_a(mo, saxophone).
+
+object(highd).
+is_a(highd, key).
+
+object(spring).
+is_a(spring, part).
+
+object(brokenspring).
+is_a(brokenspring, part).
+
+member(X,C) :- is_a(X,C).
+member(X,C) :- is_a(X,C0),
+	subclass(C0 ,C).
+
+siblings(C1 ,C2) :- is_subclass(C1 ,C),
+	is_subclass(C2 ,C),
+	C1 != C2.
+-member(X,C2) :- member(X,C1),
+	siblings(C1 ,C2),
+	C1 != C2.
+
+has_a(jake, spring).
+has_a(mo, brokenspring).
+
+broken(X) :- has_a(X, brokenspring).
+
+-broken(X) :- is_a(X, saxophone),
+	not ab(d(X)),
+	not broken(X).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
