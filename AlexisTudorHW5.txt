@@ -1,0 +1,70 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Color Map %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+color_map([],_).
+color_map([Region|Regions], Colors) :- 
+    color_region(Region, Colors), color_map(Regions, Colors).
+color_region(r(_,Color,Neighbors), Colors) :-
+    select(Color, Colors, Colors1), 
+    members(Neighbors, Colors1).
+members([], _).
+members([C|R], Colors) :- member(C, Colors), members(R, Colors).
+
+map(_, [],[]).
+map(F, [H1|T1],[H2|T2]) :- call(F,(H1,H2)), map(F,T1,T2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% Missionary-Cannibal Problem %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Shore States
+%   left_shore(NumMissionary, NumCannibal).
+%   right_shore(NumMissionary, NumCannibal).
+
+% Moves Should Be Given By
+%   boat(NumMissionary, NumCannibal).
+
+% Your input will be the initial shore states, and the output will be the sequence
+% of moves; any valid sequence of moves should be admissible. And the final states.
+
+/*
+Challenge: Print out the states before and after each move
+Note: It is not necessary to implement this!
+    
+    Initial State           Move        Final State
+    left_shore(3, 3)      boat(0,2)     left_shore(3, 1)
+    right_shore(0, 0)                   right_shore(0, 2)
+*/
+
+get_moves(Left1, Right1, Moves, Left2, Right2) :- %print("Initial State"), tab(10),
+    %print("Move"), tab(10), print("Final State"), nl,
+    get_moves([Left1, Right1], [Left2,Right2], l, [[Left1, Right1]], [], Moves).
+
+get_moves(State, State, _, _, Moves, Moves).
+get_moves(State1, State2, Side, PrevStates, PrevMoves, Moves) :- 
+    %print(State1), tab(10),
+    valid_move(State1, Side, Move),
+    update(Move, State1, StateN, Side),
+    flip(Side, SideN),
+    \+member(StateN,PrevStates),
+    %print(Move), print(Side), print(->), print(SideN), tab(10), print(StateN),nl,
+    get_moves(StateN, State2, SideN, [StateN|PrevStates], [Move|PrevMoves], Moves). 
+
+valid_move([left_shore(ML,CL),right_shore(_,_)], l, boat(M,C)) :-
+    M in 0..2, C in 0..2,
+    M #=< ML, C #=< CL, (ML-M #>= CL-C; ML-M #= 0), M+C #> 0, M+C #< 3, %(M+MR #>= C+CR; M #= 0, ML #=0),
+    labeling([ff],[M,C]). 
+valid_move([left_shore(_,_),right_shore(MR,CR)], r, boat(M,C)) :-
+    M in 0..2, C in 0..2,
+    M #=< MR, C #=< CR, (MR-M #>= CR-C; MR-M #= 0), M+C #> 0, M+C #< 3, %(M+ML #>= C+CL; M #= 0, ML #=0),
+    labeling([ff],[M,C]). 
+
+update(boat(M,C), [left_shore(ML,CL),right_shore(MR,CR)], 
+       [left_shore(ML2,CL2),right_shore(MR2,CR2)], l) :-
+    MR2 is MR + M, CR2 is CR + C, ML2 is ML - M, CL2 is CL - C.
+update(boat(M,C), [left_shore(ML,CL),right_shore(MR,CR)], 
+       [left_shore(ML2,CL2),right_shore(MR2,CR2)], r) :-
+    MR2 is MR - M, CR2 is CR - C, ML2 is ML + M, CL2 is CL + C.
+
+flip(r,l).
+flip(l,r).
